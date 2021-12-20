@@ -22,6 +22,7 @@ export default function Post({ post }) {
   const [detailComment, setDetailComment] = useState([])
   const baseURL = 'https://jsonplaceholder.typicode.com'
   const [open, setOpen] = useState(false);
+  const arrDetail = []
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,13 +36,19 @@ export default function Post({ post }) {
 
   const handleOpen = (val) => {
     setOpen(true)
-    const res = axios.get(`${baseURL}/posts/${val}/comments`)
-    setDetailComment(res)
-    console.log('val', detailComment)
+    axios.get(`${baseURL}/posts/${val}/comments`).then(function (response) {
+      // handle success
+      console.log(response.data);
+      setDetailComment(response.data)
+      arrDetail.push(response.data)
+    })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
   };
   const handleClose = () => setOpen(false);
 
-  // console.log('post', post)
   return (
     <div className="post">
       <div className="postWrapper">
@@ -65,30 +72,32 @@ export default function Post({ post }) {
               aria-describedby="modal-modal-description"
             >
               <Box className='commentBox' sx={style}>
-                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                  <ListItem alignItems="flex-start">
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary="Brunch this weekend?"
-                      secondary={
-                        <Fragment>
-                          <Typography
-                            sx={{ display: 'inline' }}
-                            component="span"
-                            variant="body2"
-                            color="text.primary"
-                          >
-                            Ali Connors
-                          </Typography>
-                          {" — I'll be in your neighborhood doing errands this…"}
-                        </Fragment>
-                      }
-                    />
-                  </ListItem>
-                  <Divider variant="inset" component="li" />
-                </List>
+                {detailComment.map((v) => (
+                  <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                    <ListItem alignItems="flex-start">
+                      <ListItemAvatar>
+                        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={v.name}
+                        secondary={
+                          <Fragment>
+                            <Typography
+                              sx={{ display: 'inline' }}
+                              component="span"
+                              variant="body2"
+                              color="text.primary"
+                            >
+                              {v.email}
+                            </Typography>
+                            {` — ${v.body}`}
+                          </Fragment>
+                        }
+                      />
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
+                  </List>
+                ))}
               </Box>
             </Modal>
           </div>
