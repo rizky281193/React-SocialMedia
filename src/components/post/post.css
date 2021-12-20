@@ -76,3 +76,15 @@
     border-bottom: 1px dashed gray;
     font-size: 15px;
 }
+
+.commentBox {
+  background-color: white;
+  width: 50%;
+  position: absolute;
+  height: auto;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  border-radius: 10px;
+  padding: 16px;
+}
